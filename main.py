@@ -9,9 +9,10 @@ class Activity(BaseModel):
     description: str
     short_description: str
     image_link: str
-    x_coordinate: float
-    y_coordinate: float
-    lang_pref: int | None = None
+    lat: float
+    lon: float
+    lang_pref: int = 0
+    author: int = 0
 
 
 app = FastAPI()
@@ -25,3 +26,8 @@ async def root():
 @app.get("/places/{id}")
 async def get_activity_data(id: int, lang_pref: int = 0):
     return {"id": id}
+
+
+@app.post("/place")
+async def add_place(place: Activity):
+    return place
