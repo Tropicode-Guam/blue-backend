@@ -60,19 +60,6 @@ class Type(Base):
     Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
-class Language(Base):
-    __tablename__ = 'language'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    region_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
-    Translation = relationship(Translation.__tablename__, backref=__tablename__)
-
-
-class Text(Base):
-    __tablename__ = 'text'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    Translation = relationship(Translation.__tablename__, backref=__tablename__)
-
-
 class Translation(Base):
     __tablename__ = 'translation'
     text_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("text"), primary_key=True, nullable=False)
@@ -81,10 +68,23 @@ class Translation(Base):
     text = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
 
 
+class Language(Base):
+    __tablename__ = 'language'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
+    region_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
+    transl = relationship(Translation.__tablename__, backref=__tablename__)
+
+
+class Text(Base):
+    __tablename__ = 'text'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
+    transl = relationship(Translation.__tablename__, backref=__tablename__)
+
+
 # TODO: add more fields as they are added to the db
 
 class User(Base):
-    __tablename__ = 'translation'
+    __tablename__ = 'user'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
@@ -102,5 +102,5 @@ class database:
 
     def init(self):
         # Define the MariaDB engine using MariaDB Connector/Python
-        engine = sqlalchemy.create_engine(f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@127.0.0.1:3306/mydb")
-
+        engine = sqlalchemy.create_engine(
+            f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@127.0.0.1:3306/mydb")
