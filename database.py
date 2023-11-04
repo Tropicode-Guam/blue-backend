@@ -2,9 +2,14 @@ from typing import Optional
 import datetime
 
 import sqlalchemy
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import os
+import logging
+
+# Configure the logging settings
+logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 Base = declarative_base()
 
@@ -100,7 +105,12 @@ class Images(Base):
 class database:
     engine = None
 
-    def init(self):
+    def __init__(self):
         # Define the MariaDB engine using MariaDB Connector/Python
         engine = sqlalchemy.create_engine(
             f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@127.0.0.1:3306/mydb")
+        try:
+            with engine.connect():
+                logging.info("maria db connected  successfully!")
+        except SQLAlchemyError as e:
+            logging.critical("Failed to create engine:", str(e))

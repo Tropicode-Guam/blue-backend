@@ -2,6 +2,10 @@ from __future__ import annotations
 import aiohttp
 from fastapi import FastAPI
 from pydantic import BaseModel
+import logging
+
+# Configure the logging settings
+logging.basicConfig(filename='blue_backend.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Activity(BaseModel):
