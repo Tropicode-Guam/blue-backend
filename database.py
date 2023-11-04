@@ -4,8 +4,7 @@ import datetime
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-engine = None
+import os
 
 Base = declarative_base()
 
@@ -36,6 +35,7 @@ class ActivityVersion(Base):
 
 class Activity(Base):
     __tablename__ = 'Activity_data'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     ActivityVersions = relationship("Activity_versions", backref=__tablename__)
     Region_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('Region'))
     description_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("text"))
@@ -95,3 +95,12 @@ class Images(Base):
     file_path = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
     numberElements = sqlalchemy.Column(sqlalchemy.Integer)
     Activity = relationship(Activity.__tablename__, backref=__tablename__)
+
+
+class database:
+    engine = None
+
+    def init(self):
+        # Define the MariaDB engine using MariaDB Connector/Python
+        engine = sqlalchemy.create_engine(f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@127.0.0.1:3306/mydb")
+
