@@ -70,7 +70,7 @@ class Type(Base):
 class Translation(Base):
     __tablename__ = 'translation'
     text_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("text"), primary_key=True, nullable=False)
-    language_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("language"), primary_key=True,
+    language_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("language.id"), primary_key=True,
                                     nullable=False)
     text = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
 
