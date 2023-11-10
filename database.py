@@ -27,20 +27,20 @@ class ActivitiesGIS(Base):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     x_coordinate = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     y_coordinate = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    backlog = relationship(ActivitiesBacklog.__tablename__, backref=__tablename__)
+    # backlog = relationship(ActivitiesBacklog.__tablename__, backref=__tablename__)
 
 
 class ActivityVersion(Base):
     __tablename__ = 'Activity_versions'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     Activity_data_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('Activity_data.id'))
-    backlog = relationship(ActivitiesBacklog.__tablename__, backref=__tablename__)
+    # backlog = relationship(ActivitiesBacklog.__tablename__, backref=__tablename__)
 
 
 class Activity(Base):
     __tablename__ = 'Activity_data'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    ActivityVersions = relationship("Activity_versions", backref=__tablename__)
+    # ActivityVersions = relationship("Activity_versions", backref=__tablename__)
     Region_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('Region'))
     description_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("text"))
     name_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("text"))
@@ -54,14 +54,14 @@ class Region(Base):
     __tablename__ = 'Region'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     region_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
-    Activity = relationship(Activity.__tablename__, backref=__tablename__)
+    # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
 class Type(Base):
     __tablename__ = 'type'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     region_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
-    Activity = relationship(Activity.__tablename__, backref=__tablename__)
+    # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
 class Translation(Base):
@@ -76,13 +76,13 @@ class Language(Base):
     __tablename__ = 'language'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     language_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
-    transl = relationship(Translation.__tablename__, backref=__tablename__)
+    # transl = relationship(Translation.__tablename__, backref=__tablename__)
 
 
 class Text(Base):
     __tablename__ = 'text'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    transl = relationship(Translation.__tablename__, backref=__tablename__)
+    # transl = relationship(Translation.__tablename__, backref=__tablename__)
 
 
 # TODO: add more fields as they are added to the db
@@ -90,7 +90,7 @@ class Text(Base):
 class User(Base):
     __tablename__ = 'user'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    Activity = relationship(Activity.__tablename__, backref=__tablename__)
+    # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
 class Images(Base):
@@ -98,7 +98,7 @@ class Images(Base):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
     file_path = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
     numberElements = sqlalchemy.Column(sqlalchemy.Integer)
-    Activity = relationship(Activity.__tablename__, backref=__tablename__)
+    # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
 def insert_text(session, text: str, lang_pref: str):
