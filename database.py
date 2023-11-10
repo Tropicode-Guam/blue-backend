@@ -10,7 +10,6 @@ import logging
 
 # Configure the logging settings
 logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
 Base = declarative_base()
 
 
@@ -76,7 +75,7 @@ class Translation(Base):
 class Language(Base):
     __tablename__ = 'language'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, nullable=False)
-    region_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
+    language_name = sqlalchemy.Column(sqlalchemy.VARCHAR, nullable=False)
     transl = relationship(Translation.__tablename__, backref=__tablename__)
 
 
@@ -102,8 +101,24 @@ class Images(Base):
     Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
+def insert_text(session, text: str, lang_pref: str):
+    text = Text()
+    session.add(text)
+    session.commit()
+    session.add(Translation(text_id=text.id, language_id=database.languages[lang_pref], text=text))
+    session.commit()
+    return text.id
+
+
+def get_region_id(session, activity):
+    # hard coded 1 for guam for now
+    return 1
+
+
 class database:
     engine = None
+    Session = None
+    languages = None
 
     def __init__(self):
         # Define the MariaDB engine using MariaDB Connector/Python
@@ -114,3 +129,13 @@ class database:
                 logging.info("maria db connected  successfully!")
         except SQLAlchemyError as e:
             logging.critical("Failed to create engine:", str(e))
+
+        self.Session = sqlalchemy.orm.sessionmaker()
+        self.Session.configure(bind=engine)
+        self.Session = self.Session()
+        ##pull the languages dict
+        self.get_languages()
+
+    def get_languages(self):
+        query = self.Session.query(Language).all()
+        self.languages = {row.language_name: row.id for row in query}

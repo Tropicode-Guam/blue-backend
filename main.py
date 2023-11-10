@@ -3,9 +3,10 @@ import aiohttp
 from fastapi import FastAPI
 from pydantic import BaseModel
 import logging
+import database as db
 
 # Configure the logging settings
-logging.basicConfig(filename='blue_backend.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='blue_backend.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Activity(BaseModel):
@@ -35,11 +36,12 @@ async def get_activity_data(id: int, lang_pref: int = 0):
 
 @app.post("/place")
 async def add_place(place: Activity):
+    logging.debug("Post request received")
     redirect: str = await get_redirect(place.gmap_link)
     coordinates = redirect.split('@')[1].split(',')[:2]
-    latitude: float = float(coordinates[0])
-    longtitude: float = float(coordinates[1])
-
+    place.lat = float(coordinates[0])
+    place.lon = float(coordinates[1])
+    db.insert_activity(db.database.Session,)
     return place
 
 
