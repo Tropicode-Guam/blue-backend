@@ -1,51 +1,61 @@
-from __future__ import annotations
-import aiohttp
+from databases import Database
+from sqlalchemy import MetaData
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load environment variables from .env file
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+database = Database(DATABASE_URL)
+metadata = MetaData()
+
+# Define your tables using SQLAlchemy ORM
+from sqlalchemy import Table, Column, Integer, String
+
+users = Table(
+    "users",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("name", String(50)),
+    Column("email", String(50)),
+)
+
+# Connect and disconnect to the database in event handlers
 from fastapi import FastAPI
-from pydantic import BaseModel
-import logging
-import database as db
-
-# Configure the logging settings
-logging.basicConfig(filename='blue_backend.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
-class Activity(BaseModel):
-    name: str
-    description: str
-    short_description: str
-    image_link: str
-    lat: float = None
-    lon: float = None
-    gmap_link: str
-    lang_pref: str = 'en'
-    author: int = 0
-
 
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup():
+    await database.connect()
 
-@app.get("/places")
-async def root():
-    return {"message": "Hello, World!"}
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
+# Define your API routes
+from pydantic import BaseModel
 
-@app.get("/places/{id}")
-async def get_activity_data(id: int, lang_pref: int = 0):
-    return {"id": id}
+class UserIn(BaseModel):
+    name: str
+    email: str
 
+class UserOut(UserIn):
+    id: int
 
-@app.post("/place")
-async def add_place(place: Activity):
-    logging.debug("Post request received")
-    redirect: str = await get_redirect(place.gmap_link)
-    coordinates = redirect.split('@')[1].split(',')[:2]
-    place.lat = float(coordinates[0])
-    place.lon = float(coordinates[1])
-    db.insert_activity(db.database.Session,)
-    return place
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to my FastAPI application!"}
 
+@app.get("/users/", response_model=list[UserOut])
+async def read_users():
+    query = users.select()
+    return await database.fetch_all(query)
+    
+@app.post("/users/", response_model=UserOut)
+async def create_user(user: UserIn):
+    query = users.insert().values(name=user.name, email=user.email)
+    last_record_id = await database.execute(query)
+    return {**user.dict(), "id": last_record_id}
 
-async def get_redirect(url: str):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            return str(response.url)
