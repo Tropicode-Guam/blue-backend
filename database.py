@@ -9,7 +9,6 @@ import os
 import logging
 from dotenv import load_dotenv
 
-import main
 
 load_dotenv()
 
@@ -132,22 +131,22 @@ class database:
         self.languages = {row.language_name: row.id for row in query}
 
 
-def get_region_id(db: database, activity: main.Place):
+def get_region_id(db: database, activity):
     # hard coded 1 for guam for now
     return 1
 
 
-def get_type_id(db: database, activity: main.Place):
+def get_type_id(db: database, activity):
     # hard coded 0 for now
     return 0
 
 
-def get_author_id(db: database, activity: main.Place):
+def get_author_id(db: database, activity):
     # hard coded 0 for admin for now
     return 0
 
 
-def save_img_path(db: database, activity: main.Place):
+def save_img_path(db: database, activity):
     images = Images(file_path=activity.image_link, numberElements=1)
     db.Session.add(images)
     db.Session.commit()
