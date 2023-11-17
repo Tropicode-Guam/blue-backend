@@ -179,3 +179,4 @@ def insert_activity(db: database, activity: main.Activity):
     db.Session.add(db_activity)
     db.Session.commit()
 
+    logging.debug(db)
