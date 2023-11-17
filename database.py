@@ -108,7 +108,7 @@ def insert_text(db, text_str: str, lang_pref: str):
     text = Text()
     db.Session.add(text)
     db.Session.commit()
-    translation = Translation(text_id=text.id, language_id=database.languages[lang_pref], text=text_str)
+    translation = Translation(text_id=text.id, language_id=db.languages[lang_pref], text=text_str)
     db.Session.add(translation)
     db.Session.commit()
     return text.id
