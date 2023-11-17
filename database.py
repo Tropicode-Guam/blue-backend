@@ -163,7 +163,7 @@ def insert_text(db: database, text_str: str, lang_pref: str):
     return text.id
 
 
-def insert_activity(db: database, activity: main.Place):
+def insert_activity(db: database, activity):
     name_id: int = insert_text(db=db, text_str=activity.name, lang_pref=activity.lang_pref)
     description_id: int = insert_text(db=db, text_str=activity.description, lang_pref=activity.lang_pref)
     short_descr_id: int = insert_text(db=db, text_str=activity.short_description, lang_pref=activity.lang_pref)
