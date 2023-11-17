@@ -104,13 +104,13 @@ class Images(Base):
     # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
-def insert_text(session, text_str: str, lang_pref: str):
+def insert_text(db, text_str: str, lang_pref: str):
     text = Text()
-    session.add(text)
-    session.commit()
+    db.Session.add(text)
+    db.Session.commit()
     translation = Translation(text_id=text.id, language_id=database.languages[lang_pref], text=text_str)
-    session.add(translation)
-    session.commit()
+    db.Session.add(translation)
+    db.Session.commit()
     return text.id
 
 
