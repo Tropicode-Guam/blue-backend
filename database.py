@@ -132,22 +132,22 @@ class database:
         self.languages = {row.language_name: row.id for row in query}
 
 
-def get_region_id(db: database, activity: main.Activity):
+def get_region_id(db: database, activity: main.Place):
     # hard coded 1 for guam for now
     return 1
 
 
-def get_type_id(db: database, activity: main.Activity):
+def get_type_id(db: database, activity: main.Place):
     # hard coded 0 for now
     return 0
 
 
-def get_author_id(db: database, activity: main.Activity):
+def get_author_id(db: database, activity: main.Place):
     # hard coded 0 for admin for now
     return 0
 
 
-def save_img_path(db: database, activity: main.Activity):
+def save_img_path(db: database, activity: main.Place):
     images = Images(file_path=activity.image_link, numberElements=1)
     db.Session.add(images)
     db.Session.commit()
@@ -164,7 +164,7 @@ def insert_text(db: database, text_str: str, lang_pref: str):
     return text.id
 
 
-def insert_activity(db: database, activity: main.Activity):
+def insert_activity(db: database, activity: main.Place):
     name_id: int = insert_text(db=db, text_str=activity.name, lang_pref=activity.lang_pref)
     description_id: int = insert_text(db=db, text_str=activity.description, lang_pref=activity.lang_pref)
     short_descr_id: int = insert_text(db=db, text_str=activity.short_description, lang_pref=activity.lang_pref)

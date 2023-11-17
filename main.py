@@ -9,7 +9,7 @@ import database as db
 logging.basicConfig(filename='blue_backend.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-class Activity(BaseModel):
+class Place(BaseModel):
     name: str
     description: str
     short_description: str
@@ -35,7 +35,7 @@ async def get_activity_data(id: int, lang_pref: int = 0):
 
 
 @app.post("/place")
-async def add_place(place: Activity):
+async def add_place(place: Place):
     logging.debug("Post request received")
     redirect: str = await get_redirect(place.gmap_link)
     coordinates = redirect.split('@')[1].split(',')[:2]
