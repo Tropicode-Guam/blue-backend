@@ -41,7 +41,7 @@ async def add_place(place: Activity):
     coordinates = redirect.split('@')[1].split(',')[:2]
     place.lat = float(coordinates[0])
     place.lon = float(coordinates[1])
-    db.insert_activity(db.database.Session,)
+    db.insert_activity(db.database.Session,place)
     return place
 
 

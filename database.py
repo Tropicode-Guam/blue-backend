@@ -8,11 +8,13 @@ from sqlalchemy.orm import relationship
 import os
 import logging
 from dotenv import load_dotenv
+
+import main
+
 load_dotenv()
 
-
 # Configure the logging settings
-logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 Base = declarative_base()
 
 
@@ -104,21 +106,6 @@ class Images(Base):
     # Activity = relationship(Activity.__tablename__, backref=__tablename__)
 
 
-def insert_text(db, text_str: str, lang_pref: str):
-    text = Text()
-    db.Session.add(text)
-    db.Session.commit()
-    translation = Translation(text_id=text.id, language_id=db.languages[lang_pref], text=text_str)
-    db.Session.add(translation)
-    db.Session.commit()
-    return text.id
-
-
-def get_region_id(session, activity):
-    # hard coded 1 for guam for now
-    return 1
-
-
 class database:
     engine = None
     Session = None
@@ -143,3 +130,52 @@ class database:
     def get_languages(self):
         query = self.Session.query(Language).all()
         self.languages = {row.language_name: row.id for row in query}
+
+
+def get_region_id(db: database, activity: main.Activity):
+    # hard coded 1 for guam for now
+    return 1
+
+
+def get_type_id(db: database, activity: main.Activity):
+    # hard coded 0 for now
+    return 0
+
+
+def get_author_id(db: database, activity: main.Activity):
+    # hard coded 0 for admin for now
+    return 0
+
+
+def save_img_path(db: database, activity: main.Activity):
+    images = Images(file_path=activity.image_link, numberElements=1)
+    db.Session.add(images)
+    db.Session.commit()
+    return images.id
+
+
+def insert_text(db: database, text_str: str, lang_pref: str):
+    text = Text()
+    db.Session.add(text)
+    db.Session.commit()
+    translation = Translation(text_id=text.id, language_id=db.languages[lang_pref], text=text_str)
+    db.Session.add(translation)
+    db.Session.commit()
+    return text.id
+
+
+def insert_activity(db: database, activity: main.Activity):
+    name_id: int = insert_text(db=db, text_str=activity.name, lang_pref=activity.lang_pref)
+    description_id: int = insert_text(db=db, text_str=activity.description, lang_pref=activity.lang_pref)
+    short_descr_id: int = insert_text(db=db, text_str=activity.short_description, lang_pref=activity.lang_pref)
+    region_id: int = get_region_id(db=db, activity=activity)
+    type_id: int = get_type_id(db=db, activity=activity)
+    images_id: int = save_img_path(db=db, activity=activity)
+    author_id: int = get_author_id(db=db, activity=activity)
+
+    db_activity: Activity = Activity(Region_id=region_id, description_id=description_id, name_id=name_id,
+                                     shortDescrip_id=short_descr_id, type_id=type_id, images_id=images_id
+                                     , author_id=author_id)
+    db.Session.add(db_activity)
+    db.Session.commit()
+
