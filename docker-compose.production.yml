@@ -17,18 +17,16 @@ services:
       - db
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.production
     depends_on:
       - db
     restart: always
     environment:
-      - VIRTUAL_HOST=${HOST:-localhost}
+      - VIRTUAL_HOST=${HOST}
       - VIRTUAL_PORT=8000
       - VIRTUAL_PATH=${VIRTUAL_PATH}
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./api:/usr/src/app/api
     networks:
       - db
       - production_proxy-network

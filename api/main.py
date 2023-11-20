@@ -3,7 +3,7 @@ import aiohttp
 from fastapi import FastAPI
 from pydantic import BaseModel
 import logging
-import database as db
+import api.database as db
 import os
 from dotenv import load_dotenv
 
