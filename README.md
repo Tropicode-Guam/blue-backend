@@ -31,9 +31,10 @@ See [DB](#db) section for info about the DB spun up this way
 In order to run this in production mode, ensure that the nginx network is running first by going to the frontend repo directory and running `make start-network`. `HOST` in the `.env` file can be `localhost` if just testing that this builds in production mode, or the actual hostname of the machine. If trying to get the whole project running in production mode from your computer, you can use [ngrok](https://ngrok.com/) to host your localhost on a domain.  
 
 Command: `docker compose -f docker-compose.production.yml up -d --force-recreate --build`  
-`--force-recreate` ensures that the service is rebuilt if it's already running
-`--build` rebuilds it if necessary. useful for if `.env` values change
-`-d` runs it in detached mode (in the background). To see the logs of these detached containers, run `docker compose -f docker-compose.production.yml logs -f`. The second `-f` will follow the logs as they are written  
+`--force-recreate` ensures that the service is rebuilt if it's already running  
+`--build` rebuilds it if necessary. useful for if `.env` values change  
+`-d` runs it in detached mode (in the background)  
+To see the logs of these detached containers, run `docker compose -f docker-compose.production.yml logs -f`. The second `-f` will follow the logs as they are written  
 
 `docker compose -f docker-compose.production.yml down` to spin down the containers
 
