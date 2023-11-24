@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb:11.1.3
+    restart: always
+    container_name: blue-guam-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${SQL_LOGIN}
+      - MARIADB_PASSWORD=${SQL_PASSWORD}
+      - MARIADB_DATABASE=mydb
+    volumes:
+      - db:/var/lib/mysql
+      - ./scripts/sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      - db
+
+  api:
+    build: .
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - VIRTUAL_HOST=${HOST:-localhost}
+      - VIRTUAL_PORT=8000
+      - VIRTUAL_PATH=${VIRTUAL_PATH}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/usr/src/app/api
+    networks:
+      - db
+      - production_proxy-network
+
+volumes:
+  db:
+
+networks:
+  db:
+  production_proxy-network:
+    external: true
