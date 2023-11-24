@@ -25,6 +25,9 @@ services:
       - VIRTUAL_HOST=${HOST:-localhost}
       - VIRTUAL_PORT=8000
       - VIRTUAL_PATH=${VIRTUAL_PATH}
+      - SQL_LOGIN=${SQL_LOGIN}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_NETWORK_NAME=${SQL_NETWORK_NAME}
     ports:
       - "8000:8000"
     volumes:

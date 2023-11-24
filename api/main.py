@@ -11,6 +11,7 @@ load_dotenv()
 API_BASE_PATH = os.environ['VIRTUAL_PATH']
 # Configure the logging settings
 logging.basicConfig(filename='blue_backend.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+database: db.database = db.database()
 
 
 class Place(BaseModel):
@@ -61,7 +62,8 @@ async def add_place(place: Place):
     coordinates = redirect.split('@')[1].split(',')[:2]
     place.lat = float(coordinates[0])
     place.lon = float(coordinates[1])
-    db.insert_activity(db.database.Session,place)
+
+    db.insert_activity(database, place)
     return place
 
 

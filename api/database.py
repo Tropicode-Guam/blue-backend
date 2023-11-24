@@ -112,7 +112,7 @@ class database:
     def __init__(self):
         # Define the MariaDB engine using MariaDB Connector/Python
         engine = sqlalchemy.create_engine(
-            f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@127.0.0.1:3306/mydb")
+            f"mariadb+mariadbconnector://{os.environ['SQL_LOGIN']}:{os.environ['SQL_PASSWORD']}@{os.environ['SQL_NETWORK_NAME']}:3306/mydb")
         try:
             with engine.connect():
                 logging.info("maria db connected  successfully!")
