@@ -9,7 +9,6 @@ import os
 import logging
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 # Configure the logging settings
@@ -132,6 +131,9 @@ class database:
 
 
 def get_region_id(db: database, activity):
+    region: Region = db.Session.query(Region).get(1)
+    
+
     # hard coded 1 for guam for now
     return 1
 
